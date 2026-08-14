@@ -1,0 +1,14 @@
+---
+description: Conventions for Python Terraform resource/data/provider checks (CKV_* IDs).
+globs: checkov/terraform/checks/{resource,data,provider}/**/*.py
+alwaysApply: false
+---
+
+# Python Terraform checks
+
+- Subclass `BaseResourceValueCheck`, `BaseResourceNegativeValueCheck`, or `BaseResourceCheck`.
+- Set `name` (desired outcome), `id`, `supported_resources`, `categories`. Instantiate `check = ClassName()` at module bottom.
+- Terraform wraps attributes in lists. Inspected keys look like `worker_config/[0]/no_external_ip`.
+- Use this path for **one resource's attributes** or custom Python logic. Relationships between resources belong in `graph_checks/`.
+- Tests: `tests/terraform/checks/<type>/<provider>/test_<ClassName>.py` plus `example_<ClassName>/`. Run `pytest -k test_<ClassName>`.
+- Canonical test style: `tests/terraform/checks/resource/aws/test_IAMAdminPolicyDocument.py`.

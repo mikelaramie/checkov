@@ -1,11 +1,13 @@
 ---
 name: Checks Issue
-about: Create an issue regarding a check (existing or missing)
+about: Report a problem with an existing check, or a missing check if you already have IaC examples
 title: ''
 labels: 'checks'
 assignees: ''
 
 ---
+
+Requesting a new compliance control and you are on the GRC team? Use the **GRC new check request** form instead.
 
 **Describe the issue**
 If it is related to an existing check, please note the relevant check ID.

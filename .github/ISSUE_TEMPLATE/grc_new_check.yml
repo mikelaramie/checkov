@@ -1,0 +1,117 @@
+name: GRC new check request
+description: Request a new Checkov check from a compliance or GRC requirement. Use this if you are not writing Terraform yourself.
+title: "[GRC] "
+labels: ["checks"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for a **new** security or compliance requirement.
+
+        Already have a Checkov check ID (for example `CKV_GCP_86`) and think it is wrong? Use **Checks Issue** instead.
+  - type: input
+    id: requirement_title
+    attributes:
+      label: Requirement title
+      description: Phrase the desired outcome. Start with "Ensure" when you can.
+      placeholder: Ensure Cloud Storage buckets block public access
+    validations:
+      required: true
+  - type: textarea
+    id: why_it_matters
+    attributes:
+      label: Why it matters
+      description: One to three sentences. What risk or audit finding does this prevent?
+      placeholder: Public buckets can expose customer data. This control is required for our SOC 2 evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: control_mapping
+    attributes:
+      label: Framework or control IDs
+      description: CIS, NIST, SOC 2, PCI, ISO, or internal control IDs. One per line is fine.
+      placeholder: |
+        CIS GCP 5.1
+        NIST AC-3
+        INTERNAL-SEC-014
+  - type: dropdown
+    id: cloud
+    attributes:
+      label: Cloud provider
+      options:
+        - GCP
+        - AWS
+        - Azure
+        - Other / not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: iac
+    attributes:
+      label: Infrastructure as Code
+      options:
+        - Terraform
+        - CloudFormation
+        - Kubernetes
+        - Other / not sure
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: resource_type
+    attributes:
+      label: Resource type (if known)
+      description: Terraform or cloud resource name. Leave blank if you are not sure.
+      placeholder: google_storage_bucket
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Not sure
+        - General security
+        - Encryption
+        - Networking
+        - IAM
+        - Logging
+        - Backup and recovery
+        - Secrets
+        - Kubernetes
+        - Supply chain
+        - Application security
+        - API security
+        - AI and ML
+      default: 0
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Suggested severity
+      options:
+        - Not sure
+        - Low
+        - Medium
+        - High
+        - Critical
+      default: 0
+  - type: textarea
+    id: pass_example
+    attributes:
+      label: Passing example (optional)
+      description: IaC that should pass. GRC teams can skip this; engineering can fill it in later.
+      render: hcl
+  - type: textarea
+    id: fail_example
+    attributes:
+      label: Failing example (optional)
+      description: IaC that should fail. GRC teams can skip this; engineering can fill it in later.
+      render: hcl
+  - type: textarea
+    id: source_links
+    attributes:
+      label: Source links
+      description: Policy docs, CIS benchmarks, vendor guidance, or internal wiki pages.
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Exceptions, related existing checks, or notes for the engineer.
