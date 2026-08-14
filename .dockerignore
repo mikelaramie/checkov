@@ -1,5 +1,21 @@
-bin/
-checkov/
+# Replaces the upstream .dockerignore in mikelaramie/checkov.
+# Upstream excludes checkov/ and bin/ because that Dockerfile pip-installs
+# from PyPI. A source build needs those directories.
+
+.git
+.github
+.idea
+.venv
+venv
+__pycache__
+*.pyc
+*.egg-info
+.coverage
+.tox
 docs/
 integration_tests/
+performance_tests/
 tests/
+dogfood_tests/
+flake8_plugins/
+github_action_resources/

@@ -1,6 +1,6 @@
-# Copy these two files to the root of https://github.com/mikelaramie/checkov
-# (Dockerfile and cloudbuild.yaml). The upstream Dockerfile installs Checkov
-# from PyPI; this one installs the repo source so core-check changes ship in the image.
+# Copy Dockerfile, cloudbuild.yaml, and .dockerignore to the root of
+# https://github.com/mikelaramie/checkov. Upstream .dockerignore excludes
+# checkov/ (PyPI install); this image installs from source.
 
 FROM python:3.11-slim
 
