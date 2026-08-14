@@ -1,56 +1,32 @@
-substitutions:
-  _APPLY: "false"
-  _CHECKOV_IMAGE: "bridgecrew/checkov:3.3.11"
+# Lives at the root of mikelaramie/checkov. Substitutions are set by the
+# checkov-image Cloud Build trigger in terraform/bootstrap.
+timeout: 3600s
 
 steps:
-  - id: terraform-init
-    name: hashicorp/terraform:1.9
-    entrypoint: sh
+  - id: docker-build
+    name: gcr.io/cloud-builders/docker
     args:
-      - -c
-      - |
-        set -euo pipefail
-        cd terraform/environments/dev
-        terraform init -input=false
+      - build
+      - -t
+      - ${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO}/${_IMAGE}:${COMMIT_SHA}
+      - -t
+      - ${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO}/${_IMAGE}:latest
+      - .
 
-  - id: terraform-plan
-    name: hashicorp/terraform:1.9
-    entrypoint: sh
+  - id: docker-push
+    name: gcr.io/cloud-builders/docker
     args:
-      - -c
-      - |
-        set -euo pipefail
-        cd terraform/environments/dev
-        terraform plan -input=false -out=tfplan
-        terraform show -json tfplan > tfplan.json
+      - push
+      - --all-tags
+      - ${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO}/${_IMAGE}
     waitFor:
-      - terraform-init
-
-  - id: checkov
-    name: ${_CHECKOV_IMAGE}
-    args:
-      - -f
-      - terraform/environments/dev/tfplan.json
-      - --framework
-      - terraform_plan
-    waitFor:
-      - terraform-plan
-
-  - id: terraform-apply
-    name: hashicorp/terraform:1.9
-    entrypoint: sh
-    args:
-      - -c
-      - |
-        set -euo pipefail
-        if [ "${_APPLY}" != "true" ]; then
-          echo "Skipping apply (plan-only pipeline)."
-          exit 0
-        fi
-        cd terraform/environments/dev
-        terraform apply -input=false -auto-approve tfplan
-    waitFor:
-      - checkov
+      - docker-build
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+substitutions:
+  _AR_HOSTNAME: us-central1-docker.pkg.dev
+  _AR_REPO: checkov
+  _IMAGE: checkov
