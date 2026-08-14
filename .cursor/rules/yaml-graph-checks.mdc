@@ -1,0 +1,13 @@
+---
+description: Conventions for YAML Terraform graph checks (CKV2_* IDs).
+globs: checkov/terraform/checks/graph_checks/**/*.{yaml,yml}
+alwaysApply: false
+---
+
+# YAML graph checks
+
+- File: `checkov/terraform/checks/graph_checks/<provider>/<PolicyName>.yaml` with `metadata.id` like `CKV2_GCP_39`.
+- Use YAML when the policy needs a **connection** between resource types, or AND/OR across resources. Simple "attribute exists/equals" may also be YAML.
+- `cond_type` values: `attribute`, `connection`, `filter`. Combine with `and` / `or` / `not`.
+- Tests: folder `tests/terraform/graph/checks/resources/<PolicyName>/` with Terraform + `expected.yaml`, and a `test_<PolicyName>` method in `tests/terraform/graph/checks/test_yaml_policies.py` that calls `self.go("PolicyName")`.
+- Connection example: `checkov/terraform/checks/graph_checks/gcp/GCPNetworkDoesNotUseDefaultFirewall.yaml`.

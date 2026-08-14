@@ -32,6 +32,9 @@ Fixes # (issue)
 ### Fix
 *How does someone fix the issue in code and/or in runtime?*
 
+### Assumptions / GRC clarifications
+*Cloud, resource type, and IaC features this check encodes (for example lifecycle vs retention lock). Note anything still open and link the GitHub issue comment where GRC was asked.*
+
 ## Checklist:
 
 - [ ] I have performed a self-review of my own code
