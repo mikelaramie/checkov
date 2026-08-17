@@ -1,0 +1,80 @@
+---
+name: Contribution scope
+description: PM or stakeholder brief for a Checkov contribution (feature, check routing, or process). Prefer GRC new check request for compliance controls.
+title: "[Scope] "
+labels: ["contribution requested"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to turn a brief into a scoped engineering issue.
+
+        Follow [CONTRIBUTING.md](https://github.com/bridgecrewio/checkov/blob/main/CONTRIBUTING.md): start with a detailed issue and examples. **Compliance / security control?** Use **GRC new check request** instead. New checks should use the `fast-lane` label.
+  - type: input
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: One sentence. What should be true when this is done?
+      placeholder: New engineers can add a Terraform check without reading the whole repo
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Who is stuck today and what does that cost?
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Passing and failing scenarios (IaC snippets or plain language). CONTRIBUTING asks for examples on issues.
+      placeholder: |
+        Passing: …
+        Failing: …
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Primary audience
+      options:
+        - Engineers
+        - GRC / compliance
+        - QA
+        - DevOps / platform
+        - PM / stakeholders
+        - Multiple
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checklist of testable outcomes. One per line.
+      placeholder: |
+        - [ ] …
+        - [ ] …
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What we are explicitly not doing in this issue.
+  - type: dropdown
+    id: suggested_skill
+    attributes:
+      label: Suggested next skill (if known)
+      options:
+        - Not sure
+        - add-terraform-check
+        - review-check-quality
+        - qa-fixture-review
+        - prepare-ci-ready-pr
+        - scope-contribution (already done)
+      default: 0
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Docs, Slack threads, related issues, designs.
