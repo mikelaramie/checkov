@@ -1,28 +1,32 @@
 ---
 name: add-terraform-check
-description: Implements a new Checkov Terraform check from a GitHub issue or GRC requirement. Use when the user asks to add a check, implement an issue, turn a control into CKV_GCP or CKV2_GCP, or scaffold a policy from a GRC new check request.
+description: Implements a new Checkov Terraform check from a GitHub issue or GRC requirement, following CONTRIBUTING.md. Use when the user asks to add a check, implement an issue, turn a control into CKV_GCP or CKV2_GCP, or scaffold a policy from a GRC new check request.
 ---
 
 # Add a Terraform check
 
-Turn a GitHub issue or a stated requirement into a Checkov check plus tests. Do not invent a Cloud Build (or other) runner here.
+Turn a GitHub issue or a stated requirement into a Checkov check plus tests. Follow [contributing.md](../contributing.md) / root `CONTRIBUTING.md`. Do not invent a Cloud Build (or other) runner here.
+
+If the engineer has no working env yet (pipenv/pytest smoke test never run), point them to **`onboard-engineer`** first.
 
 ## Workflow
 
 Copy and track:
 
 ```
-- [ ] 1. Load the requirement
+- [ ] 1. Load the requirement (issue first)
 - [ ] 2. Map the outcome to IaC features
 - [ ] 3. Confirm pass/fail examples
 - [ ] 4. Choose Python vs graph
 - [ ] 5. Allocate the next ID
 - [ ] 6. Implement from a nearby existing check
-- [ ] 7. Add tests and run pytest
-- [ ] 8. Stop for review (PR text ready)
+- [ ] 7. Add tests and run them per CONTRIBUTING
+- [ ] 8. Stop for review (PR text ready, fast-lane)
 ```
 
 ### 1. Load the requirement
+
+CONTRIBUTING expects contributors to **open an issue** with a detailed description and examples before coding.
 
 If the user gives an issue number or URL:
 
@@ -30,9 +34,15 @@ If the user gives an issue number or URL:
 gh issue view <n> --json title,body,labels
 ```
 
+If there is **no issue**, draft one (or use `scope-contribution`) before implementing, unless the user explicitly wants a local-only spike. For a new check, ensure the issue has (or will get) the **`fast-lane`** label:
+
+```bash
+gh issue edit <n> --add-label "fast-lane"
+```
+
 Map GRC form headings to fields: Requirement title, Why it matters, Framework or control IDs, Cloud provider, Infrastructure as Code, Resource type, Category, Suggested severity, Passing/Failing example, Source links.
 
-If there is no issue, use the user's description. If **provider**, **resource type**, or **desired outcome** is missing, note it here and include it in the step 2 questions (do not invent a cloud).
+If **provider**, **resource type**, or **desired outcome** is missing, note it here and include it in the step 2 questions (do not invent a cloud).
 
 This skill covers **Terraform**. If IaC is not Terraform, say so and stop.
 
@@ -78,7 +88,7 @@ Example: “buckets must retain data 90 days and move to archive after 180” co
 
 ### 3. Confirm pass/fail examples
 
-Need at least one passing and one failing Terraform resource.
+Need at least one passing and one failing Terraform resource (CONTRIBUTING: detailed examples on the issue).
 
 - If the issue includes them, use those.
 - If not, draft `main.tf` snippets from provider docs that match the **chosen** features from step 2, and **show the engineer** before writing production check files.
@@ -98,9 +108,9 @@ Read [id-allocation.md](id-allocation.md). Search the repo for the prefix (`CKV_
 
 ### 6. Implement
 
-Copy the closest existing check for that provider.
+Copy the closest existing check for that provider. Keep the change a **single coherent feature block** (CONTRIBUTING: rationalize commits).
 
-**Python:** `name`, `id`, `supported_resources`, `categories`, then `check = ClassName()` at the bottom. Terraform attributes are list-wrapped (`encryption/[0]/default_kms_key_name`). Closest simple example: `checkov/terraform/checks/resource/gcp/CloudBuildWorkersArePrivate.py`.
+**Python:** `name`, `id`, `supported_resources`, `categories`, then `check = ClassName()` at the bottom. Terraform attributes are list-wrapped (`encryption/[0]/default_kms_key_name`). Closest simple example: `checkov/terraform/checks/resource/gcp/CloudBuildWorkersArePrivate.py`. Any regex must use `re.compile` (CONTRIBUTING / flake8).
 
 **YAML:** `metadata.id` / `name` / `category`, then `definition`. Connection example: `checkov/terraform/checks/graph_checks/gcp/GCPNetworkDoesNotUseDefaultFirewall.yaml`. Attribute-only example: `checkov/terraform/checks/graph_checks/gcp/GCPVertexAIPrivateEndpoint.yaml`.
 
@@ -108,27 +118,42 @@ Check `name` should be the positive outcome ("Ensure …").
 
 ### 7. Tests
 
-Read [test-layout.md](test-layout.md). Parse fixtures through `Runner`, assert resource ID sets. Then:
+Read [test-layout.md](test-layout.md). Match CONTRIBUTING “Tests for new checks”:
+
+- Parse fixtures through `Runner` (not hand-built conf; see bad example `test_ALBListenerHTTPS.py`)
+- Assert **resource ID sets** for pass and fail (counts alone are not enough)
+- Canonical good example: `test_IAMAdminPolicyDocument.py`
+
+Run tests with the **preferred** CONTRIBUTING commands when possible:
 
 ```bash
-pytest -k test_<Name>
+pipenv run pytest -k test_<Name>
+# or with coverage:
+pipenv run python -m coverage run -m pytest -k test_<Name>
 ```
 
-Fix failures before anything else.
+Fallback if pipenv is unavailable: `.venv` + `pytest -k test_<Name> -o addopts=` (note the fallback). Fix failures before anything else.
+
+Optional confidence check from CONTRIBUTING: build/install the local package and run `checkov` against the example fixtures.
 
 ### 8. Stop for review
 
-Do not commit unless the user asked. Prepare PR text that matches `.github/PULL_REQUEST_TEMPLATE.md`, including:
+Do not commit unless the user asked. Prefer running **`review-check-quality`** next (or apply that checklist). Then prepare PR text that matches `.github/PULL_REQUEST_TEMPLATE.md` and CONTRIBUTING PR rules:
 
 - Title: `feat(terraform): add CKV_<PROVIDER>_<N> to <outcome>`
 - `Fixes #<issue>` when an issue exists
-- Policy description and how to fix in IaC
+- Label PR **`fast-lane`** for new checks
+- Do not assign reviewers
+- Policy description and how to fix in IaC; consider a short `docs/` note if useful
 - **Assumptions / GRC clarifications:** cloud, resource, IaC features encoded, thresholds, exceptions, and any questions still open. Link the issue comment from step 2.
 
 If you proceeded on assumptions, post a short issue comment with the same assumption list so GRC can still object after the PR is up.
 
+For pre-commit, CI title/gates, and optional consumer image bumps, use **`prepare-ci-ready-pr`**. QA fixture coverage: **`qa-fixture-review`**.
+
 ## Additional resources
 
+- [../contributing.md](../contributing.md) — CONTRIBUTING.md summary
 - [python-vs-graph.md](python-vs-graph.md)
 - [id-allocation.md](id-allocation.md)
 - [test-layout.md](test-layout.md)

@@ -1,0 +1,12 @@
+# Repos that should pin this Checkov image after a successful Cloud Build.
+# Fill in real owner/name values for your demo. Keep the list short (1–2).
+
+image: us-central1-docker.pkg.dev/REPLACE_PROJECT/checkov/checkov
+
+consumers:
+  - repo: REPLACE_ORG/REPLACE_CONSUMER_REPO_1
+    files:
+      - path: cloudbuild.yaml
+  # - repo: REPLACE_ORG/REPLACE_CONSUMER_REPO_2
+  #   files:
+  #     - path: .github/workflows/checkov.yml

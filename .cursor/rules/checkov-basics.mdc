@@ -1,13 +1,18 @@
 ---
-description: Checkov vocabulary, check layout, tests, and PR titles. Use when adding checks, reviewing IaC policies, or implementing GRC GitHub issues.
+description: Checkov vocabulary, check layout, tests, PR titles, CONTRIBUTING.md alignment, and Cursor skill routing. Use when adding checks, reviewing IaC policies, preparing PRs, or implementing GRC GitHub issues.
 alwaysApply: true
 ---
 
 # Checkov project basics
 
 - Say **check** or **policy**, not "control". Shipped IDs are `CKV_<PROVIDER>_<N>` (Python) or `CKV2_<PROVIDER>_<N>` (YAML graph).
+- Follow root `CONTRIBUTING.md` for issues, tests, pipenv/pre-commit, and PRs. Agent summary: `.cursor/skills/contributing.md`.
+- New engineers: run `onboard-engineer` first (env, smoke test, first-hour path). See `AGENTS.md`.
 - Python Terraform checks live in `checkov/terraform/checks/resource/<provider>/` (also `data/` / `provider/`). YAML graph checks live in `checkov/terraform/checks/graph_checks/<provider>/`.
-- GRC requests use the **GRC new check request** GitHub issue form. Engineers implement them with the `add-terraform-check` skill (`gh issue view`, comment mapping questions on the issue, then scaffold check + tests). Record IaC assumptions on the PR.
-- New checks need pass **and** fail fixtures parsed through the **runner**. Assert **which resource IDs** pass/fail, not only counts. Do not hand-build conf dicts.
-- PR titles drive the changelog: `feat(terraform): add CKV_GCP_128 to ensure …`. Allowed scopes are listed in `.github/PULL_REQUEST_TEMPLATE.md`.
+- GRC requests use the **GRC new check request** GitHub issue form. Engineers implement them with the `add-terraform-check` skill (`gh issue view`, comment mapping questions on the issue, then scaffold check + tests). Record IaC assumptions on the PR. Label new-check issues/PRs `fast-lane`.
+- Before human review: `review-check-quality`. Before/while opening a PR: `prepare-ci-ready-pr`. PM briefs: `scope-contribution`. QA fixtures: `qa-fixture-review`.
+- New checks need pass **and** fail fixtures parsed through the **runner**. Assert **which resource IDs** pass/fail, not only counts. Do not hand-build conf dicts (see CONTRIBUTING / `test_IAMAdminPolicyDocument.py`).
+- Prefer `pipenv run pytest` and `pre-commit`; disclose `.venv`/`uv` fallbacks. Use `re.compile` for regex.
+- PR titles drive the changelog: `feat(terraform): add CKV_GCP_128 to ensure …`. Allowed scopes are listed in `.github/PULL_REQUEST_TEMPLATE.md`. Do not assign reviewers; use `[WIP]`/`hold` when unfinished.
 - Do not fill retired ID gaps. Allocate **max existing number + 1** for that prefix. `test_no_missing_ids` enforces sequences (GCP Python skips `CKV_GCP_5`, `_19`, `_67`).
+- Stay inside approved context: this repo, its issues/PRs, `.cursor/`, and listed consumers in `.cursor/checkov-consumers.yml` (see `prepare-ci-ready-pr` / `context-boundaries.md`).
