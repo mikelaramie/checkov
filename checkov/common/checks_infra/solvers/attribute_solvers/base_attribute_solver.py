@@ -9,6 +9,7 @@ from typing import List, Tuple, Dict, Any, Optional, Pattern, TYPE_CHECKING
 from bc_jsonpath_ng.ext import parse
 from networkx import DiGraph
 
+from checkov.common.checks_infra.gcp_label_attributes import resolve_gcp_label_attribute
 from checkov.common.graph.checks_infra import debug
 from checkov.common.graph.checks_infra.enums import SolverType
 from checkov.common.graph.checks_infra.solvers.base_solver import BaseSolver
@@ -73,7 +74,10 @@ class BaseAttributeSolver(BaseSolver):
         # handle edge cases in some policies that explicitly look for blank values
         # we also need to check the attribute stack - e.g., if they are looking for tags.component, but tags = local.tags,
         # then we actually need to see if tags is variable dependent as well
-        attr_parts = self.attribute.split('.')  # type:ignore[union-attr]  # due to attribute can be None (but not really)
+        # Resolve GCP label aliases per vertex; do not assign back to self.attribute
+        # (this solver is shared across ThreadPoolExecutor workers).
+        attribute = resolve_gcp_label_attribute(vertex, self.attribute)
+        attr_parts = attribute.split('.')  # type:ignore[union-attr]  # due to attribute can be None (but not really)
         attr_to_check = None
         for attr in attr_parts:
             attr_to_check = f'{attr_to_check}.{attr}' if attr_to_check else attr
@@ -83,21 +87,23 @@ class BaseAttributeSolver(BaseSolver):
             # we can only check is_attribute_value_check when evaluating the full attribute
             # for example, if we have a policy that says "tags.component exists", and tags = local.tags, then
             # we need to check if tags is variable dependent even though this is a not value_attribute check
-            if (attr_to_check != self.attribute or self.is_value_attribute_check) \
+            if (attr_to_check != attribute or self.is_value_attribute_check) \
                     and self._is_variable_dependant(value_to_check, vertex['source_']) \
                     and self.value != '':
                 return None
 
-        if self.attribute and (self.is_jsonpath_check or re.match(WILDCARD_PATTERN, self.attribute)):
-            attribute_matches = self.get_attribute_matches(vertex)
+        if attribute and (self.is_jsonpath_check or re.match(WILDCARD_PATTERN, attribute)):
+            attribute_matches = self.get_attribute_matches(vertex, attribute)
             filtered_attribute_matches = attribute_matches
             if self.is_value_attribute_check and self.value != '':
                 filtered_attribute_matches = []
-                for attribute in attribute_matches:
-                    resource_variable_dependant = self._is_variable_dependant(vertex.get(attribute), vertex['source_'])
+                for matched_attribute in attribute_matches:
+                    resource_variable_dependant = self._is_variable_dependant(
+                        vertex.get(matched_attribute), vertex['source_']
+                    )
                     policy_variable_dependant = self._is_variable_dependant(self.value, vertex['source_'])
                     if not resource_variable_dependant or resource_variable_dependant and policy_variable_dependant:
-                        filtered_attribute_matches.append(attribute)
+                        filtered_attribute_matches.append(matched_attribute)
             if attribute_matches:
                 result = self._evaluate_attribute_matches(
                     vertex=vertex,
@@ -108,7 +114,7 @@ class BaseAttributeSolver(BaseSolver):
                     # skip unknown
                     debug.attribute_block(
                         resource_types=self.resource_types,
-                        attribute=self.attribute,
+                        attribute=attribute,
                         operator=self.operator,
                         value=self.value,
                         resource=vertex,
@@ -118,12 +124,12 @@ class BaseAttributeSolver(BaseSolver):
                 return result
 
         result = self.resource_type_pred(vertex, self.resource_types) and self._get_operation(
-            vertex=vertex, attribute=self.attribute
+            vertex=vertex, attribute=attribute
         )
 
         debug.attribute_block(
             resource_types=self.resource_types,
-            attribute=self.attribute,
+            attribute=attribute,
             operator=self.operator,
             value=self.value,
             resource=vertex,
@@ -170,11 +176,12 @@ class BaseAttributeSolver(BaseSolver):
             return True
         return False if len(attribute_matches) == len(filtered_attribute_matches) else None
 
-    def get_attribute_matches(self, vertex: Dict[str, Any]) -> List[str]:
+    def get_attribute_matches(self, vertex: Dict[str, Any], attribute: Optional[str] = None) -> List[str]:
+        attr = self.attribute if attribute is None else attribute
         try:
             attribute_matches: List[str] = []
-            if self.is_jsonpath_check and self.attribute:
-                parsed_attr = self._get_cached_jsonpath_statement(statement=self.attribute)
+            if self.is_jsonpath_check and attr:
+                parsed_attr = self._get_cached_jsonpath_statement(statement=attr)
 
                 for match in parsed_attr.find(vertex):
                     full_path = str(match.full_path)
@@ -182,15 +189,15 @@ class BaseAttributeSolver(BaseSolver):
                         vertex[full_path] = match.value
 
                     attribute_matches.append(full_path)
-            elif isinstance(self.attribute, str):
-                attribute_patterns = self.get_attribute_patterns(self.attribute)
-                attribute_parts = [attr for attr in self.attribute.split(".") if attr != "*"]
-                for attr in vertex:
-                    if any(part not in attr for part in attribute_parts):
+            elif isinstance(attr, str):
+                attribute_patterns = self.get_attribute_patterns(attr)
+                attribute_parts = [part for part in attr.split(".") if part != "*"]
+                for vertex_attr in vertex:
+                    if any(part not in vertex_attr for part in attribute_parts):
                         # if even one attribute part doesn't exist in the vertex attribute, then no need to further proceed
                         continue
-                    if any(re.match(attribute_pattern, attr) for attribute_pattern in attribute_patterns):
-                        attribute_matches.append(attr)
+                    if any(re.match(attribute_pattern, vertex_attr) for attribute_pattern in attribute_patterns):
+                        attribute_matches.append(vertex_attr)
 
             return attribute_matches
         except Exception:

@@ -1,0 +1,13 @@
+# Ensures GCP taggable resources are evaluated for a labels map, including
+# resource_labels / user_labels / settings.user_labels aliases.
+metadata:
+  name: "Ensure GCP taggable resources have labels"
+  id: "CUSTOM_GCP_TAGGABLE_LABELS"
+  category: "GENERAL_SECURITY"
+scope:
+  provider: gcp
+definition:
+  cond_type: "attribute"
+  resource_types: "taggable"
+  attribute: "labels"
+  operator: "exists"

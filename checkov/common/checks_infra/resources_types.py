@@ -1,3 +1,5 @@
+from checkov.common.checks_infra.gcp_label_attributes import GCP_ALTERNATE_LABEL_RESOURCES
+
 resources_types = {
     "aws": [
         "aws",
@@ -5017,3 +5019,7 @@ resources_types = {
         "azurerm_workloads_sap_three_tier_virtual_instance"
     ]
 }
+
+# GCP types that accept labels under resource_labels / user_labels (not top-level labels).
+# See checkov/common/checks_infra/gcp_label_attributes.py and docs/3.Custom Policies.
+resources_types["gcp_taggable"].extend(GCP_ALTERNATE_LABEL_RESOURCES)
