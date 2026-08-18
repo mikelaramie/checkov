@@ -14,6 +14,8 @@ Ordered path for a new engineer once `onboard-engineer` smoke test passes.
 6. **Self-review** with `review-check-quality` (QA may use `qa-fixture-review`).
 7. **PR** with `prepare-ci-ready-pr` (pipenv tests, pre-commit, title, `fast-lane`).
 
+Work follows **plan → design → develop → review → test → deploy**. Stops and next prompts: [`AGENTS.md`](../../../AGENTS.md) SDLC table.
+
 ## Starter brief (hello contribution)
 
 Use when there is no issue yet. File via **GRC new check request** or `scope-contribution`, label **`fast-lane`**, then implement. Prefer a **real team / GRC requirement** over inventing work.

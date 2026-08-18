@@ -63,10 +63,12 @@ From CONTRIBUTING “Creating a pull-request” + fast-lane:
 
 ## Skill mapping
 
-| CONTRIBUTING topic | Primary skill |
-|--------------------|---------------|
-| Clone, pipenv/pre-commit, first smoke test | `onboard-engineer` |
-| Open issue, examples, fast-lane on issue | `scope-contribution` |
-| Implement check + runner tests | `add-terraform-check` |
-| Test standard / anti-patterns | `review-check-quality`, `qa-fixture-review` |
-| Local test, pre-commit, PR etiquette, fast-lane on PR | `prepare-ci-ready-pr` |
+| CONTRIBUTING topic | SDLC phase | Primary skill |
+|--------------------|------------|---------------|
+| Clone, pipenv/pre-commit, first smoke test | before plan | `onboard-engineer` |
+| Open issue, examples, fast-lane on issue | plan | `scope-contribution` |
+| Map IaC features, implement check + runner tests | design / develop / test | `add-terraform-check` |
+| Test standard / anti-patterns | review | `review-check-quality`, `qa-fixture-review` |
+| Local test, pre-commit, PR etiquette, fast-lane on PR | test / deploy | `prepare-ci-ready-pr` |
+
+Phase contract (must-not, next prompt): root [`AGENTS.md`](../../AGENTS.md) SDLC table. Every skill `SKILL.md` must include `## SDLC`. Authoring skills/rules: `.cursor/rules/skill-sdlc.mdc`.

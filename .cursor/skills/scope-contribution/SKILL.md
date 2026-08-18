@@ -7,6 +7,13 @@ description: Turns a PM or stakeholder brief into a scoped GitHub issue per CONT
 
 Turn a short brief into a **scoped GitHub issue** (and next-skill pointer). Follow [contributing.md](../contributing.md) / root `CONTRIBUTING.md`: **open an issue first** with a detailed description and examples. Do not implement code in this skill.
 
+## SDLC
+
+- Phase: plan
+- Must not: write check or test files; open an implementation PR
+- Next: `add-terraform-check` (`Implement the check described in issue #N`); or `qa-fixture-review` / `prepare-ci-ready-pr` when the issue is fixtures or CI
+- Source of truth: CONTRIBUTING.md — Open an issue
+
 ## Workflow
 
 ```

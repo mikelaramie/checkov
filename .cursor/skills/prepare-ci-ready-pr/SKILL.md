@@ -7,6 +7,13 @@ description: Prepares a Checkov change to pass CONTRIBUTING.md and repo CI gates
 
 Get a local change ready per [contributing.md](../contributing.md) / root `CONTRIBUTING.md` and this repo's CI. Stay inside [context-boundaries.md](context-boundaries.md).
 
+## SDLC
+
+- Phase: test (local pipenv/pre-commit), deploy (PR etiquette, `fast-lane`, optional consumer SHA bumps after Cloud Build)
+- Must not: push or `gh pr create` unless the user asked; invent a new IaC runner; claim full matrix CI ran if it did not
+- Next: human merge; after Cloud Build, optional consumer bumps (step 5)
+- Source of truth: CONTRIBUTING.md — Creating a pull-request + fast-lane
+
 ## Workflow
 
 ```
@@ -56,6 +63,7 @@ pre-commit run -a    # or at least on touched files if full run is too heavy—n
 - Title scope often `chore(general):` or `docs(general):`
 - Still run `pre-commit` when practical
 - No pytest required unless tests changed
+- New or changed skills: `## SDLC` block present; linked from `AGENTS.md` persona table **and** SDLC table; four questions in `AGENTS.md` Extending this system are answered. See `.cursor/rules/skill-sdlc.mdc`.
 
 Do not claim full matrix CI (all Python versions) ran locally unless it did.
 

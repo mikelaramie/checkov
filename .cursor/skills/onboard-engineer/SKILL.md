@@ -7,6 +7,13 @@ description: Sets up a new engineer to contribute to Checkov—clone sync, pipen
 
 Get from empty machine (or fresh clone) to **ready for `add-terraform-check`**. Follow [../contributing.md](../contributing.md) / root `CONTRIBUTING.md`. Read [troubleshooting.md](troubleshooting.md) when a step fails.
 
+## SDLC
+
+- Phase: before plan (environment setup)
+- Must not: implement a production check unless the user explicitly asks after setup
+- Next: `scope-contribution` (`Scope this brief into an issue`) or `add-terraform-check` (`Implement the check described in issue #N`)
+- Source of truth: CONTRIBUTING.md — pipenv / pre-commit / local test environment
+
 ## Workflow
 
 ```

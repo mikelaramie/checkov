@@ -7,6 +7,13 @@ description: Reviews a new or changed Checkov check and its tests against CONTRI
 
 Run this **before** asking for human review or opening a PR. Enforce [contributing.md](../contributing.md) / root `CONTRIBUTING.md` “Tests for new checks.” Fix critical findings when the user wants them fixed; otherwise report only.
 
+## SDLC
+
+- Phase: review (targeted test in step 5)
+- Must not: claim CI-ready or open a PR; skip CONTRIBUTING test-standard blockers
+- Next: `prepare-ci-ready-pr` (`Make this PR CI-ready`) when verdict is Ready for review; optionally `qa-fixture-review` for fixture coverage
+- Source of truth: CONTRIBUTING.md — Tests for new checks
+
 ## Workflow
 
 ```
