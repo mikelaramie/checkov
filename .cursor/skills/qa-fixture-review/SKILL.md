@@ -7,6 +7,13 @@ description: Reviews Checkov check pass/fail fixtures against CONTRIBUTING.md te
 
 Focus on **whether the tests prove the policy** per [contributing.md](../contributing.md) / root `CONTRIBUTING.md`. Use `review-check-quality` for code structure anti-patterns.
 
+## SDLC
+
+- Phase: review (fixture coverage); pairs with test assertions in CONTRIBUTING
+- Must not: rewrite production check logic unless asked; claim CI-ready
+- Next: `prepare-ci-ready-pr` (`Make this PR CI-ready`) when verdict is Pass or Pass with follow-ups; otherwise list missing fixtures for eng
+- Source of truth: CONTRIBUTING.md — Tests for new checks
+
 ## Workflow
 
 ```

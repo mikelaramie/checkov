@@ -1,5 +1,5 @@
 ---
-description: Checkov vocabulary, check layout, tests, PR titles, CONTRIBUTING.md alignment, and Cursor skill routing. Use when adding checks, reviewing IaC policies, preparing PRs, or implementing GRC GitHub issues.
+description: Checkov vocabulary, check layout, tests, PR titles, CONTRIBUTING.md alignment, Cursor skill routing, and SDLC phase order. Use when adding checks, reviewing IaC policies, preparing PRs, implementing GRC GitHub issues, or editing skills/rules.
 alwaysApply: true
 ---
 
@@ -10,6 +10,7 @@ alwaysApply: true
 - New engineers: run `onboard-engineer` first (env, smoke test, first-hour path). See `AGENTS.md`.
 - Python Terraform checks live in `checkov/terraform/checks/resource/<provider>/` (also `data/` / `provider/`). YAML graph checks live in `checkov/terraform/checks/graph_checks/<provider>/`.
 - GRC requests use the **GRC new check request** GitHub issue form. Engineers implement them with the `add-terraform-check` skill (`gh issue view`, comment mapping questions on the issue, then scaffold check + tests). Record IaC assumptions on the PR. Label new-check issues/PRs `fast-lane`.
+- Contribution skills follow SDLC in `AGENTS.md`: plan → design → develop → review → test → deploy. Do not finish a later phase from an earlier skill. New skills/rules need a `## SDLC` block (see `.cursor/rules/skill-sdlc.mdc`).
 - Before human review: `review-check-quality`. Before/while opening a PR: `prepare-ci-ready-pr`. PM briefs: `scope-contribution`. QA fixtures: `qa-fixture-review`.
 - New checks need pass **and** fail fixtures parsed through the **runner**. Assert **which resource IDs** pass/fail, not only counts. Do not hand-build conf dicts (see CONTRIBUTING / `test_IAMAdminPolicyDocument.py`).
 - Prefer `pipenv run pytest` and `pre-commit`; disclose `.venv`/`uv` fallbacks. Use `re.compile` for regex.

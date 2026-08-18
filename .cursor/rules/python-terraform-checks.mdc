@@ -6,6 +6,7 @@ alwaysApply: false
 
 # Python Terraform checks
 
+- Develop-phase only. Plan, review, and deploy live in skills (`AGENTS.md` SDLC table).
 - Subclass `BaseResourceValueCheck`, `BaseResourceNegativeValueCheck`, or `BaseResourceCheck`.
 - Set `name` (desired outcome), `id`, `supported_resources`, `categories`. Instantiate `check = ClassName()` at module bottom.
 - Terraform wraps attributes in lists. Inspected keys look like `worker_config/[0]/no_external_ip`.

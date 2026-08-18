@@ -32,6 +32,22 @@ Typical path: **onboard** → GRC or PM files issue (`fast-lane` for new checks)
 
 All contribution skills must follow `CONTRIBUTING.md` (issue first, runner tests, resource ID assertions, pipenv/pre-commit preferred, no assigned reviewers, `fast-lane` for new checks).
 
+## SDLC (plan → design → develop → review → test → deploy)
+
+Skills are prompt-time guidance. Order holds only if each skill **refuses later-phase work** and names the next skill. `CONTRIBUTING.md` still wins when a skill summary disagrees.
+
+| Phase | Owner | Must not | Next |
+|-------|--------|----------|------|
+| *(before plan)* | `onboard-engineer` | Implement a production check | `scope-contribution` or `add-terraform-check` |
+| **Plan** | `scope-contribution`, GRC new check request form | Write check or test files | `Implement the check described in issue #N` → `add-terraform-check` |
+| **Design** | `add-terraform-check` steps 2–4 (IaC mapping, examples, Python vs graph) | Allocate IDs or implement until mapping is posted, unless the engineer proceeds on recorded assumptions | same skill, develop steps |
+| **Develop** | `add-terraform-check` steps 5–6 | Open a PR, push, invent a Cloud Build/other runner | tests in step 7, then review |
+| **Review** | `review-check-quality` (code), `qa-fixture-review` (fixtures) | Claim CI-ready; QA must not rewrite production check logic unless asked | `Make this PR CI-ready` → `prepare-ci-ready-pr` |
+| **Test** | Develop step 7, review targeted pytest, `prepare-ci-ready-pr` local pipenv/pre-commit, then GitHub CI | Skip runner-parsed fixtures or resource ID assertions | deploy |
+| **Deploy** | `prepare-ci-ready-pr` (PR title/etiquette, `fast-lane`, optional consumer SHA bumps) | Push or `gh pr create` unless asked; invent a new IaC runner; claim full matrix CI ran if it did not | human merge; consumer bumps after Cloud Build |
+
+Always-on `.cursor/rules/checkov-basics.mdc` names this path. Glob rules on check files are **develop-phase** only. Authoring skills/rules: `.cursor/rules/skill-sdlc.mdc`.
+
 ## Adding a check (including from a GRC issue)
 
 Use **add-terraform-check**. Typical prompt: `Implement the check described in issue #N`.
@@ -49,8 +65,29 @@ To add a new workflow the team owns:
 1. Copy a nearby skill directory; keep `SKILL.md` short; put detail in one-level reference files.
 2. Write a third-person `description` with **what** and **when** (trigger phrases).
 3. Link [contributing.md](.cursor/skills/contributing.md) when the skill touches issues, tests, or PRs.
-4. Link it from this file's persona table and from any skill that should hand off to it.
+4. Link it from this file's **persona table**, **SDLC table**, and from any skill that should hand off to it.
 5. If non-engineers start the work, add or point to a GitHub issue form under `.github/ISSUE_TEMPLATE/`.
-6. Open a PR titled like `chore(general): add Cursor skill for …` (follow CONTRIBUTING PR etiquette).
+6. Add a `## SDLC` block to `SKILL.md` (template below).
+7. Answer the four questions. If a skill can finish a later phase without naming the later skill, add a hard stop or split it.
+8. Open a PR titled like `chore(general): add Cursor skill for …` (follow CONTRIBUTING PR etiquette). Use `prepare-ci-ready-pr`.
+
+### Required `## SDLC` block
+
+```markdown
+## SDLC
+- Phase: plan | design | develop | review | test | deploy
+- Must not: <later-phase work this skill is forbidden to do>
+- Next: `<skill>` (`<exact user prompt>`)
+- Source of truth: CONTRIBUTING.md — <section>
+```
+
+Use `Phase: before plan` only for environment setup (`onboard-engineer`). If one skill spans two phases (for example design+develop), list both and put a **stop** between them.
+
+### Four questions (skill/rule PRs)
+
+1. **Which one phase is this?** If several, split or add hard stops between steps.
+2. **What must this skill refuse?** Plan must not write checks; develop must not open the PR; review must not claim CI-ready.
+3. **What is the exact next prompt?** Example: `Implement the check described in issue #N`.
+4. **Does CONTRIBUTING.md still win?** Skills summarize; they must not invent process.
 
 Do not encode secrets or customer-private repos in skills. Consumer image targets go in `.cursor/checkov-consumers.yml`.

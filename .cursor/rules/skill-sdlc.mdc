@@ -1,0 +1,32 @@
+---
+description: SDLC contract for Cursor skills and rules (plan → deploy). Use when adding or editing AGENTS.md, .cursor/skills, or .cursor/rules.
+globs: AGENTS.md,.cursor/skills/**/*.md,.cursor/rules/**/*.mdc
+alwaysApply: false
+---
+
+# Skills and rules follow SDLC
+
+Contribution work is ordered **plan → design → develop → review → test → deploy**. Tables and stops live in `AGENTS.md`. Root `CONTRIBUTING.md` wins over skill summaries.
+
+## What belongs where
+
+- Always-on (`checkov-basics.mdc`): path + vocabulary. No full workflows.
+- Glob rules on check files: **develop-phase** conventions only.
+- This rule: **authoring** skills/rules. Do not implement checks or open product PRs from here.
+
+## Every skill
+
+`SKILL.md` needs `## SDLC` with **Phase**, **Must not**, **Next** (skill + exact prompt), and **Source of truth** (CONTRIBUTING section). See `AGENTS.md` Extending this system.
+
+## Four questions (block the PR if unanswered)
+
+1. Which **one** phase? If several, split or add hard stops.
+2. What must this skill **refuse** (later-phase work)?
+3. What is the **exact next prompt**?
+4. Does **CONTRIBUTING.md** still win?
+
+If a skill can finish a later phase without naming the later skill, it will skip SDLC.
+
+## PRs for skills/rules
+
+Title `chore(general):` or `docs(general):`. Link the skill from the `AGENTS.md` persona table **and** SDLC table. Run `prepare-ci-ready-pr`.

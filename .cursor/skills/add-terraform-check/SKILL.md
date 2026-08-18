@@ -9,6 +9,13 @@ Turn a GitHub issue or a stated requirement into a Checkov check plus tests. Fol
 
 If the engineer has no working env yet (pipenv/pytest smoke test never run), point them to **`onboard-engineer`** first.
 
+## SDLC
+
+- Phase: design (steps 2–4), develop (steps 5–6), test (step 7)
+- Must not: open a PR, push, invent a Cloud Build or other runner; skip the issue or mapping wait unless the engineer proceeds on recorded assumptions
+- Next: `review-check-quality` (`Review my check before PR`); then `qa-fixture-review` / `prepare-ci-ready-pr`
+- Source of truth: CONTRIBUTING.md — Open an issue; Tests for new checks
+
 ## Workflow
 
 Copy and track:
