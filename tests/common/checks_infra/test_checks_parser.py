@@ -91,3 +91,13 @@ def test_parse_taggable_resource_list():
     providers = ["azure"]
     check = parser._parse_raw_check(raw_check, [], providers)
     assert check.resource_types == raw_resources_types.get("azure_taggable")
+
+
+def test_parse_taggable_resource_gcp():
+    parser = GraphCheckParser()
+    raw_check = {"resource_types": "taggable"}
+    providers = ["gcp"]
+    check = parser._parse_raw_check(raw_check, [], providers)
+    assert check.resource_types == raw_resources_types.get("gcp_taggable")
+    assert "google_sql_database_instance" in check.resource_types
+    assert "google_container_cluster" in check.resource_types

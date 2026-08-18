@@ -27,6 +27,12 @@ class TestCustomYamlPolicies(unittest.TestCase):
     def test_CustomAwsEMRSecurityConfiguration(self):
         self.go('CustomAwsEMRSecurityConfiguration')
 
+    def test_GCPTaggableAlternateLabels(self):
+        self.go("GCPTaggableAlternateLabels")
+
+    def test_GCPTaggableAlternateLabelKeys(self):
+        self.go("GCPTaggableAlternateLabels", check_name="GCPTaggableAlternateLabelKeys")
+
     def go(self, dir_name: str, check_name: str | None = None) -> None:
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), f"resources/{dir_name}")
         check_name = dir_name if check_name is None else check_name

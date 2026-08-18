@@ -151,10 +151,27 @@ All those operators are supporting JSONPath attribute expression by adding the `
 | --- | --- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `cond_type` | string | Must be `attribute`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `resource_type` | collection of strings | Use either `all`, `taggable`, or `[resource types from list]`                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `attribute` | string | Attribute of defined resource types. For example, `automated_snapshot_retention_period`                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `attribute` | string | Attribute of defined resource types. For example, `automated_snapshot_retention_period`. See [GCP labels and taggable resources](#gcp-labels-and-taggable-resources) when checking `labels` on GCP.                                                                                                                                                                                                                                                                                                              |
 | `operator` | string | - `equals`, `not_equals`, `regex_match`, `not_regex_match`, `exists`, `not exists`, `any`, `contains`, `not_contains`, `within`, `starting_with`, `not_starting_with`, `ending_with`, `not_ending_with`, `greater_than`, `greater_than_or_equal`, `less_than`, `less_than_or_equal`, `is_empty`, `is_not_empty`, `length_equals`, `length_not_equals`, `length_greater_than`, `length_greater_than_or_equal`, `length_less_than`, `length_less_than_or_equal`, `is_true`, `is_false`, `intersects`, `not_intersects` |
 | `value` (not relevant for operator: `exists`/`not_exists`) | string | User input.                                                                                                                                                                                                                                                                                              |
 
+### GCP labels and taggable resources
+
+When `resource_types` is `taggable` and `scope.provider` is `gcp`, Checkov expands the check to the `gcp_taggable` list. Most Google provider resources use a top-level `labels` argument. Some APIs use a different field. For those types, `attribute: labels` and `attribute: labels.<key>` also evaluate the field the resource actually has:
+
+| Terraform argument | Example resource |
+| --- | --- |
+| `labels` | `google_storage_bucket` (already on `gcp_taggable`) |
+| `resource_labels` | `google_container_cluster` |
+| `node_config.resource_labels` | `google_container_node_pool` |
+| `user_labels` | `google_monitoring_alert_policy` |
+| `settings.user_labels` | `google_sql_database_instance` |
+
+Types added for the alternate fields are listed in `checkov/common/checks_infra/gcp_label_attributes.py` (`GCP_ALTERNATE_LABEL_RESOURCES`) and appended to `gcp_taggable`.
+
+**Not matched:** Kubernetes node metadata `node_config.labels`. Those are not GCP resource labels.
+
+**`exists` vs empty maps:** `operator: exists` is true when the map is present, including `{}`. That matches AWS `tags`. Use `is_not_empty` if the policy requires at least one key.
 
 ### Evaluating list attributes
 

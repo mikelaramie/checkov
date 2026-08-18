@@ -113,6 +113,8 @@ definition:
       operator: "exists"
 ```
 
+On GCP, `attribute: labels` (and `labels.<key>`) also matches `resource_labels`, `user_labels`, and `settings.user_labels` so GKE, Cloud SQL, and Monitoring resources on `gcp_taggable` are not skipped. Kubernetes `node_config.labels` are not GCP resource labels. Details: [GCP labels and taggable resources](YAML%20Custom%20Policies.md#gcp-labels-and-taggable-resources).
+
 ## Basic Query - Terraform plan resource not deleted
 
 ```yaml
