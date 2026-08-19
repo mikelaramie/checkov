@@ -71,6 +71,7 @@ body:
         - review-check-quality
         - qa-fixture-review
         - prepare-ci-ready-pr
+        - maintain-ci-runners
         - scope-contribution (already done)
       default: 0
   - type: textarea

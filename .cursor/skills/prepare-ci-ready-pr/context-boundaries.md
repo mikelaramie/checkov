@@ -14,7 +14,7 @@ Approved sources the agent may use for Checkov contribution skills. Stay inside 
 ## Deny (unless user explicitly asks)
 
 - Cloning or searching unrelated private customer monorepos
-- Inventing a new IaC **runner** (Cloud Build, Jenkins, …) inside `add-terraform-check`
+- Inventing or editing a CI/CD **runner** (Cloud Build, Jenkins, GitHub Actions) here or in `add-terraform-check` — that is `maintain-ci-runners`
 - Reading secrets, credentials, `.env`, or cloud keys
 - Force-push, skipping hooks, or changing git config
 - Opening PRs to consumer repos not listed in `.cursor/checkov-consumers.yml` (or named by the user)
@@ -22,4 +22,4 @@ Approved sources the agent may use for Checkov contribution skills. Stay inside 
 
 ## When blocked
 
-Say what was requested, why it is out of bounds, and what in-repo alternative exists (file an issue, extend consumers YAML, use a different skill).
+Say what was requested, why it is out of bounds, and what in-repo alternative exists (file an issue, `maintain-ci-runners` for CI/CD, extend consumers YAML, use a different skill).

@@ -11,7 +11,7 @@ Turn a short brief into a **scoped GitHub issue** (and next-skill pointer). Foll
 
 - Phase: plan
 - Must not: write check or test files; open an implementation PR
-- Next: `add-terraform-check` (`Implement the check described in issue #N`); or `qa-fixture-review` / `prepare-ci-ready-pr` when the issue is fixtures or CI
+- Next: `add-terraform-check` (`Implement the check described in issue #N`); or `qa-fixture-review` when the issue is fixtures; or `maintain-ci-runners` (`Add a GitHub Actions gate for …` / `Bump consumers to Checkov SHA <sha>`) when the issue is CI/image
 - Source of truth: CONTRIBUTING.md — Open an issue
 
 ## Workflow
@@ -44,9 +44,9 @@ If the outcome is unclear, ask **one** clarifying question before filing.
 | Bug or wrong existing check | **Checks Issue** | Eng |
 | Product / DX feature (not a check) | **Feature request** or scoped issue below | Eng |
 | Test coverage / fixture gaps | Issue + QA notes | QA → `qa-fixture-review` |
-| CI, image, consumer bump | Issue labeled devops | DevOps → `prepare-ci-ready-pr` |
+| CI, image, consumer bump | **DevOps CI** form | DevOps → `maintain-ci-runners` |
 
-Prefer the GRC form when the ask is a control/requirement without Terraform yet.
+Prefer the GRC form when the ask is a control/requirement without Terraform yet. Prefer **DevOps CI** when the ask is Cloud Build, GitHub Actions, Jenkins, or an image pin.
 
 ### 3. Acceptance criteria
 
@@ -103,6 +103,7 @@ Tell the user exactly what to say next, e.g.:
 - `Implement the check described in issue #N` → `add-terraform-check`
 - `Review fixtures for issue #N / PR #M` → `qa-fixture-review`
 - `Make PR #M CI-ready` → `prepare-ci-ready-pr`
+- `Add a GitHub Actions gate for …` / `Change Cloud Build to …` / `Bump consumers to Checkov SHA <sha>` → `maintain-ci-runners`
 
 Remind eng that CONTRIBUTING expects local pipenv tests, pre-commit, and a `fast-lane` PR label for new checks.
 

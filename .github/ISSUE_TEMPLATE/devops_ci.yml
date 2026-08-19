@@ -1,0 +1,72 @@
+---
+name: DevOps CI
+description: Request a Cloud Build, GitHub Actions, Jenkins, or consumer-image change. Not for new CKV checks.
+title: "[DevOps] "
+labels: ["contribution requested"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for **CI/CD runners** and **Checkov image pins**.
+
+        Follow [CONTRIBUTING.md](https://github.com/bridgecrewio/checkov/blob/main/CONTRIBUTING.md): start with a detailed issue and examples. **New security/compliance check?** Use **GRC new check request** instead. After the pipeline PR exists, use `prepare-ci-ready-pr`. After Cloud Build publishes an image, use `maintain-ci-runners` (`Bump consumers to Checkov SHA <sha>`).
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of work
+      options:
+        - GitHub Actions workflow
+        - Cloud Build image pipeline
+        - Jenkins / CircleCI integration docs
+        - New contributor-facing CI gate (also update CONTRIBUTING.md)
+        - Consumer Checkov image SHA bump
+        - Other CI/CD
+    validations:
+      required: true
+  - type: input
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: One sentence. What should be true when this is done?
+      placeholder: PRs fail if the new linter does not pass
+    validations:
+      required: true
+  - type: textarea
+    id: where
+    attributes:
+      label: Where it runs
+      description: This repo, a listed consumer, or Jenkins elsewhere.
+      placeholder: |
+        Repo: this checkov clone
+        Path: .github/workflows/pr-test.yml
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success signal
+      description: How we know the runner works (green check, image tag, consumer pin).
+      placeholder: Cloud Build tag COMMIT_SHA exists; consumer cloudbuild.yaml pins that tag
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Passing and failing pipeline behavior (plain language is fine). CONTRIBUTING asks for examples on issues.
+      placeholder: |
+        Passing: …
+        Failing: …
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What we are explicitly not doing (new CKV checks, new Checkov IaC runners).
+      placeholder: |
+        - New CKV_* checks
+        - Repos not in .cursor/checkov-consumers.yml
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Related issues, Cloud Build trigger, consumer YAML, Slack threads.

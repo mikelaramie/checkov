@@ -43,14 +43,14 @@ From `.github/workflows/pr-test.yml`:
 - Unit tests on multiple Python versions
 - CFN lint when CloudFormation fixtures change
 
-## Image build (deploy path)
+## Image build (DevOps)
 
 Root `cloudbuild.yaml` builds and pushes:
 
 - `${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO}/${_IMAGE}:${COMMIT_SHA}`
 - `…:latest`
 
-Consumer bumps should prefer the immutable `COMMIT_SHA` tag over `latest`.
+Do not edit Cloud Build, GitHub Actions, or Jenkins from this skill. After the image exists, consumer pins: **`maintain-ci-runners`** (`Bump consumers to Checkov SHA <sha>`). Prefer the immutable `COMMIT_SHA` tag over `latest`.
 
 ## Do not claim
 

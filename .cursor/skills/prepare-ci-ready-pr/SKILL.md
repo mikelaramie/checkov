@@ -1,6 +1,6 @@
 ---
 name: prepare-ci-ready-pr
-description: Prepares a Checkov change to pass CONTRIBUTING.md and repo CI gates—local pipenv/pre-commit tests, PR title and etiquette, fast-lane, and optional consumer image SHA bumps. Use when the user asks to make a PR CI-ready, follow contribution guidelines, fit the path to production, bump consumer Checkov image SHAs, or notify dependent repos after a Cloud Build.
+description: Prepares a Checkov change to pass CONTRIBUTING.md and repo CI gates—local pipenv/pre-commit tests, PR title and etiquette, and fast-lane. Use when the user asks to make a PR CI-ready, follow contribution guidelines, or fit the path to production. For Cloud Build, GitHub Actions, Jenkins, or consumer image SHA bumps, use maintain-ci-runners.
 ---
 
 # Prepare a CI-ready PR
@@ -9,9 +9,9 @@ Get a local change ready per [contributing.md](../contributing.md) / root `CONTR
 
 ## SDLC
 
-- Phase: test (local pipenv/pre-commit), deploy (PR etiquette, `fast-lane`, optional consumer SHA bumps after Cloud Build)
-- Must not: push or `gh pr create` unless the user asked; invent a new IaC runner; claim full matrix CI ran if it did not
-- Next: human merge; after Cloud Build, optional consumer bumps (step 5)
+- Phase: test (local pipenv/pre-commit), deploy (PR etiquette, `fast-lane`)
+- Must not: push or `gh pr create` unless the user asked; edit Cloud Build/Jenkins/GitHub Actions runners or bump consumers (that is `maintain-ci-runners`); claim full matrix CI ran if it did not
+- Next: human merge; if an image pin is needed, `Bump consumers to Checkov SHA <sha>` → `maintain-ci-runners`
 - Source of truth: CONTRIBUTING.md — Creating a pull-request + fast-lane
 
 ## Workflow
@@ -21,13 +21,12 @@ Get a local change ready per [contributing.md](../contributing.md) / root `CONTR
 - [ ] 2. Sync fork / base branch awareness
 - [ ] 3. Run local checks (pipenv, pre-commit)
 - [ ] 4. Draft PR title and body (CONTRIBUTING etiquette)
-- [ ] 5. (Optional) Consumer image SHA bumps
-- [ ] 6. Stop for human approval before push/PR
+- [ ] 5. Stop for human approval before push/PR
 ```
 
 ### 1. Confirm scope, issue, boundaries
 
-Read [context-boundaries.md](context-boundaries.md). If the user asks for something outside the allowlist (new IaC runner, unrelated org repos, secrets), refuse or stop and ask.
+Read [context-boundaries.md](context-boundaries.md). If the user asks to add or change Cloud Build, Jenkins, GitHub Actions, or bump consumer images, stop and point to **`maintain-ci-runners`**. If they ask for something else outside the allowlist (unrelated org repos, secrets), refuse or stop and ask.
 
 Summarize: files touched, check IDs if any, linked issue.
 
@@ -94,29 +93,23 @@ Body: follow `.github/PULL_REQUEST_TEMPLATE.md` **and** CONTRIBUTING:
 
 Do **not** push or `gh pr create` unless the user asked.
 
-### 5. Optional: bump consumer Checkov images
-
-After this repo's image is built (`cloudbuild.yaml` tags `${COMMIT_SHA}` and `latest`), DevOps may want PRs in dependent repos.
-
-If the user asks to notify/bump consumers:
-
-1. Read [consumer-bump.md](consumer-bump.md) and `.cursor/checkov-consumers.yml` (create from the example if missing).
-2. For each listed repo, open a branch/PR that updates the Checkov image digest or tag to the new `COMMIT_SHA`.
-3. PR body should link the Checkov commit/PR and list new check IDs when known.
-
-Need `gh` auth and write access to those repos. Demo default: 1–2 repos in the YAML list.
-
-### 6. Stop
+### 5. Stop
 
 Print:
 
 - Suggested title (and WIP note if incomplete)
 - Suggested body / labels (`fast-lane` when applicable)
 - Local commands already run / still needed (`pipenv`, `pre-commit`)
-- Consumer bump status (skipped / planned / PRs created)
+- If Cloud Build succeeded and consumers need a pin: `Bump consumers to Checkov SHA <sha>` → `maintain-ci-runners`
 - Reminder: ping maintainers on Slack only if the PR lacks attention (CONTRIBUTING)
 
 ## Who uses this
 
 - Engineers: last mile before PR
-- DevOps: step 5 after Cloud Build succeeds
+- DevOps: same etiquette for a *pipeline* PR after `maintain-ci-runners` edits; not for consumer bumps
+
+## Additional resources
+
+- [../contributing.md](../contributing.md) — CONTRIBUTING.md summary
+- [ci-gates.md](ci-gates.md)
+- [../maintain-ci-runners/SKILL.md](../maintain-ci-runners/SKILL.md) — CI/CD runners and consumer pins

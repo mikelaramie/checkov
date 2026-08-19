@@ -70,5 +70,6 @@ From CONTRIBUTING “Creating a pull-request” + fast-lane:
 | Map IaC features, implement check + runner tests | design / develop / test | `add-terraform-check` |
 | Test standard / anti-patterns | review | `review-check-quality`, `qa-fixture-review` |
 | Local test, pre-commit, PR etiquette, fast-lane on PR | test / deploy | `prepare-ci-ready-pr` |
+| Cloud Build / GitHub Actions / Jenkins, consumer image pins | develop (CI) / deploy (post-merge) | `maintain-ci-runners` |
 
 Phase contract (must-not, next prompt): root [`AGENTS.md`](../../AGENTS.md) SDLC table. Every skill `SKILL.md` must include `## SDLC`. Authoring skills/rules: `.cursor/rules/skill-sdlc.mdc`.
