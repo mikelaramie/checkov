@@ -60,3 +60,4 @@ Normal on first run. For onboarding, smoke pytest + `pre-commit install` is enou
 | Ready to implement CKV check | `add-terraform-check` |
 | Env works but tests look wrong | `review-check-quality` / `qa-fixture-review` |
 | Ready to open PR | `prepare-ci-ready-pr` |
+| Cloud Build / Actions / Jenkins / image pin | `maintain-ci-runners` |

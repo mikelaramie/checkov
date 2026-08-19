@@ -5,14 +5,14 @@ description: Implements a new Checkov Terraform check from a GitHub issue or GRC
 
 # Add a Terraform check
 
-Turn a GitHub issue or a stated requirement into a Checkov check plus tests. Follow [contributing.md](../contributing.md) / root `CONTRIBUTING.md`. Do not invent a Cloud Build (or other) runner here.
+Turn a GitHub issue or a stated requirement into a Checkov check plus tests. Follow [contributing.md](../contributing.md) / root `CONTRIBUTING.md`. Do not invent a Cloud Build, Jenkins, or GitHub Actions runner here — that is **`maintain-ci-runners`**.
 
 If the engineer has no working env yet (pipenv/pytest smoke test never run), point them to **`onboard-engineer`** first.
 
 ## SDLC
 
 - Phase: design (steps 2–4), develop (steps 5–6), test (step 7)
-- Must not: open a PR, push, invent a Cloud Build or other runner; skip the issue or mapping wait unless the engineer proceeds on recorded assumptions
+- Must not: open a PR, push, invent a Cloud Build/Jenkins/GitHub Actions runner; skip the issue or mapping wait unless the engineer proceeds on recorded assumptions
 - Next: `review-check-quality` (`Review my check before PR`); then `qa-fixture-review` / `prepare-ci-ready-pr`
 - Source of truth: CONTRIBUTING.md — Open an issue; Tests for new checks
 
@@ -156,7 +156,7 @@ Do not commit unless the user asked. Prefer running **`review-check-quality`** n
 
 If you proceeded on assumptions, post a short issue comment with the same assumption list so GRC can still object after the PR is up.
 
-For pre-commit, CI title/gates, and optional consumer image bumps, use **`prepare-ci-ready-pr`**. QA fixture coverage: **`qa-fixture-review`**.
+For pre-commit, PR title, and etiquette, use **`prepare-ci-ready-pr`**. QA fixture coverage: **`qa-fixture-review`**. Cloud Build / GitHub Actions / Jenkins / consumer image pins: **`maintain-ci-runners`**.
 
 ## Additional resources
 

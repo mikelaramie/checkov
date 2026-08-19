@@ -23,12 +23,13 @@ Setup details and failures: [`.cursor/skills/onboard-engineer/troubleshooting.md
 | Eng (new) | Env, smoke test, first-hour path | `onboard-engineer` |
 | Eng | Implement a Terraform check from an issue/GRC ask | `add-terraform-check` |
 | Eng / QA | Pre-review: anti-patterns, weak tests | `review-check-quality` |
-| Eng / DevOps | CI-ready PR, CONTRIBUTING etiquette, consumer image SHA bumps | `prepare-ci-ready-pr` |
+| Eng | CI-ready PR, CONTRIBUTING etiquette | `prepare-ci-ready-pr` |
+| DevOps | Cloud Build / GitHub Actions / Jenkins CI, consumer image SHA bumps | `maintain-ci-runners` |
 | PM / lead | Brief → scoped GitHub issue + hand-off | `scope-contribution` |
 | QA | Fixture / test-plan coverage for a check | `qa-fixture-review` |
 | GRC | File the requirement | **GRC new check request** issue form |
 
-Typical path: **onboard** → GRC or PM files issue (`fast-lane` for new checks) → eng `add-terraform-check` → `review-check-quality` / QA `qa-fixture-review` → `prepare-ci-ready-pr` → (optional) consumer bumps after Cloud Build.
+Typical path: **onboard** → GRC or PM files issue (`fast-lane` for new checks) → eng `add-terraform-check` → `review-check-quality` / QA `qa-fixture-review` → `prepare-ci-ready-pr` → human merge → DevOps `maintain-ci-runners` after Cloud Build (optional consumer bumps). CI/pipeline asks: **DevOps CI** form or `scope-contribution` → `maintain-ci-runners` → `prepare-ci-ready-pr`.
 
 All contribution skills must follow `CONTRIBUTING.md` (issue first, runner tests, resource ID assertions, pipenv/pre-commit preferred, no assigned reviewers, `fast-lane` for new checks).
 
@@ -39,12 +40,14 @@ Skills are prompt-time guidance. Order holds only if each skill **refuses later-
 | Phase | Owner | Must not | Next |
 |-------|--------|----------|------|
 | *(before plan)* | `onboard-engineer` | Implement a production check | `scope-contribution` or `add-terraform-check` |
-| **Plan** | `scope-contribution`, GRC new check request form | Write check or test files | `Implement the check described in issue #N` → `add-terraform-check` |
+| **Plan** | `scope-contribution`, GRC new check request form, DevOps CI form | Write check or test files | `Implement the check described in issue #N` → `add-terraform-check`; CI/image → `Add a GitHub Actions gate for …` / `Bump consumers to Checkov SHA <sha>` → `maintain-ci-runners` |
 | **Design** | `add-terraform-check` steps 2–4 (IaC mapping, examples, Python vs graph) | Allocate IDs or implement until mapping is posted, unless the engineer proceeds on recorded assumptions | same skill, develop steps |
-| **Develop** | `add-terraform-check` steps 5–6 | Open a PR, push, invent a Cloud Build/other runner | tests in step 7, then review |
+| **Develop** (checks) | `add-terraform-check` steps 5–6 | Open a PR, push, invent a Cloud Build/Jenkins/GitHub Actions runner | tests in step 7, then review |
+| **Develop** (CI/CD) | `maintain-ci-runners` (pipeline files) | Write CKV checks; invent a Checkov IaC runner; skip CONTRIBUTING.md for a new contributor-facing gate | `Make this PR CI-ready` → `prepare-ci-ready-pr` |
 | **Review** | `review-check-quality` (code), `qa-fixture-review` (fixtures) | Claim CI-ready; QA must not rewrite production check logic unless asked | `Make this PR CI-ready` → `prepare-ci-ready-pr` |
 | **Test** | Develop step 7, review targeted pytest, `prepare-ci-ready-pr` local pipenv/pre-commit, then GitHub CI | Skip runner-parsed fixtures or resource ID assertions | deploy |
-| **Deploy** | `prepare-ci-ready-pr` (PR title/etiquette, `fast-lane`, optional consumer SHA bumps) | Push or `gh pr create` unless asked; invent a new IaC runner; claim full matrix CI ran if it did not | human merge; consumer bumps after Cloud Build |
+| **Deploy** (PR) | `prepare-ci-ready-pr` (PR title/etiquette, `fast-lane`) | Push or `gh pr create` unless asked; edit CI runners or bump consumers; claim full matrix CI ran if it did not | human merge; then DevOps if an image pin is needed |
+| **Deploy** (post-merge) | `maintain-ci-runners` (consumer SHA bumps) | Write CKV checks; bump repos not in `.cursor/checkov-consumers.yml` unless the user names them | human merge of consumer PRs |
 
 Always-on `.cursor/rules/checkov-basics.mdc` names this path. Glob rules on check files are **develop-phase** only. Authoring skills/rules: `.cursor/rules/skill-sdlc.mdc`.
 
@@ -54,7 +57,7 @@ Use **add-terraform-check**. Typical prompt: `Implement the check described in i
 
 The skill posts mapping questions on the GitHub issue for GRC and records IaC features under **Assumptions / GRC clarifications** on the PR.
 
-GRC: `.github/ISSUE_TEMPLATE/grc_new_check.yml`. Existing-check bugs: **Checks Issue**.
+GRC: `.github/ISSUE_TEMPLATE/grc_new_check.yml`. Existing-check bugs: **Checks Issue**. CI/CD and image pins: **DevOps CI** (`.github/ISSUE_TEMPLATE/devops_ci.yml`) → `maintain-ci-runners`.
 
 ## Extending this system
 
@@ -66,7 +69,7 @@ To add a new workflow the team owns:
 2. Write a third-person `description` with **what** and **when** (trigger phrases).
 3. Link [contributing.md](.cursor/skills/contributing.md) when the skill touches issues, tests, or PRs.
 4. Link it from this file's **persona table**, **SDLC table**, and from any skill that should hand off to it.
-5. If non-engineers start the work, add or point to a GitHub issue form under `.github/ISSUE_TEMPLATE/`.
+5. If non-engineers start the work, add or point to a GitHub issue form under `.github/ISSUE_TEMPLATE/` (GRC new check request, Contribution scope, DevOps CI).
 6. Add a `## SDLC` block to `SKILL.md` (template below).
 7. Answer the four questions. If a skill can finish a later phase without naming the later skill, add a hard stop or split it.
 8. Open a PR titled like `chore(general): add Cursor skill for …` (follow CONTRIBUTING PR etiquette). Use `prepare-ci-ready-pr`.

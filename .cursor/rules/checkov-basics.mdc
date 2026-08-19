@@ -1,5 +1,5 @@
 ---
-description: Checkov vocabulary, check layout, tests, PR titles, CONTRIBUTING.md alignment, Cursor skill routing, and SDLC phase order. Use when adding checks, reviewing IaC policies, preparing PRs, implementing GRC GitHub issues, or editing skills/rules.
+description: Checkov vocabulary, check layout, tests, PR titles, CONTRIBUTING.md alignment, Cursor skill routing, and SDLC phase order. Use when adding checks, reviewing IaC policies, preparing PRs, implementing GRC GitHub issues, editing skills/rules, or changing Cloud Build / GitHub Actions / Jenkins.
 alwaysApply: true
 ---
 
@@ -11,9 +11,9 @@ alwaysApply: true
 - Python Terraform checks live in `checkov/terraform/checks/resource/<provider>/` (also `data/` / `provider/`). YAML graph checks live in `checkov/terraform/checks/graph_checks/<provider>/`.
 - GRC requests use the **GRC new check request** GitHub issue form. Engineers implement them with the `add-terraform-check` skill (`gh issue view`, comment mapping questions on the issue, then scaffold check + tests). Record IaC assumptions on the PR. Label new-check issues/PRs `fast-lane`.
 - Contribution skills follow SDLC in `AGENTS.md`: plan → design → develop → review → test → deploy. Do not finish a later phase from an earlier skill. New skills/rules need a `## SDLC` block (see `.cursor/rules/skill-sdlc.mdc`).
-- Before human review: `review-check-quality`. Before/while opening a PR: `prepare-ci-ready-pr`. PM briefs: `scope-contribution`. QA fixtures: `qa-fixture-review`.
+- Before human review: `review-check-quality`. Before/while opening a PR: `prepare-ci-ready-pr`. PM briefs: `scope-contribution`. QA fixtures: `qa-fixture-review`. Cloud Build / GitHub Actions / Jenkins / consumer image pins: `maintain-ci-runners`.
 - New checks need pass **and** fail fixtures parsed through the **runner**. Assert **which resource IDs** pass/fail, not only counts. Do not hand-build conf dicts (see CONTRIBUTING / `test_IAMAdminPolicyDocument.py`).
 - Prefer `pipenv run pytest` and `pre-commit`; disclose `.venv`/`uv` fallbacks. Use `re.compile` for regex.
 - PR titles drive the changelog: `feat(terraform): add CKV_GCP_128 to ensure …`. Allowed scopes are listed in `.github/PULL_REQUEST_TEMPLATE.md`. Do not assign reviewers; use `[WIP]`/`hold` when unfinished.
 - Do not fill retired ID gaps. Allocate **max existing number + 1** for that prefix. `test_no_missing_ids` enforces sequences (GCP Python skips `CKV_GCP_5`, `_19`, `_67`).
-- Stay inside approved context: this repo, its issues/PRs, `.cursor/`, and listed consumers in `.cursor/checkov-consumers.yml` (see `prepare-ci-ready-pr` / `context-boundaries.md`).
+- Stay inside approved context: this repo, its issues/PRs, `.cursor/`, and listed consumers in `.cursor/checkov-consumers.yml` (see `prepare-ci-ready-pr` / `maintain-ci-runners` `context-boundaries.md`).
