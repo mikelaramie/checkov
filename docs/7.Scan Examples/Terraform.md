@@ -106,3 +106,7 @@ export TF_HOST_NAME=gitlab.example.com
 export TF_REGISTRY_TOKEN=xxxxxx
 checkov -d . --download-external-modules true
 ```
+
+## GCP Cloud KMS
+
+To require hardware-backed customer-managed keys, see [GCP Cloud KMS hardware-backed keys](GCP%20Cloud%20KMS.md) (`CKV_GCP_129`).
